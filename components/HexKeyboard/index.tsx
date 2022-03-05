@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet,Platform } from "react-native";
 
 interface HexKeyboardProps {
   style: object;
@@ -54,26 +54,26 @@ export const HexKeyboard: React.FunctionComponent<HexKeyboardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
+    
     flexDirection: "row",
     flexWrap: "wrap",    
-    bottom: "-70%",
+    bottom: "-60%",
     fontFamily: 'OpenSans'
   },
   buttonLabel: {      
     textAlign: "center",
-    justifyContent: "center",
-    alignItems: "center",    
     fontSize: 25,  
-    paddingRight: 5,
+    
+    paddingHorizontal: 5,
+    paddingVertical: 5,
   },
-  button: {
-    minWidth: "15%",
+  button: {    
+    paddingRight: (Platform.OS === 'ios' ?  5 : 0),
     flex: 1,
-    margin: 3,
-    paddingVertical: 7,
+    margin: 3,    
+    minWidth: "15%",
     borderWidth: 2,    
     borderColor: "#d6d7da",
-    borderRadius: 10,
-    paddingHorizontal: 5,
+    borderRadius: 10,    
   },
 });
