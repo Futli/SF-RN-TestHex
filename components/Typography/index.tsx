@@ -1,6 +1,6 @@
 import React,{useEffect} from 'react'
 import { Text as RNText, StyleSheet, TextProps } from 'react-native'
-import * as font from "expo-font";
+import {useFonts} from "expo-font";
 import Colors from '../../constants/Сolors'
 
 interface TypographyProps extends TextProps {
@@ -27,13 +27,13 @@ interface TypographyProps extends TextProps {
 
 export const Text: React.FunctionComponent<TypographyProps> = (props) => {
     const { sm, nm, md, lg, ml, xl, dark, light, center, success, primary, inactive, secondary, bold, normal, semiBold, children, style, ...rest } = props
-    
-    useEffect(() => {
-        font.loadAsync({
-          'OpenSans': require("../../assets/fonts/OpenSans.ttf"),
-        });
-      }, []);
-
+    const [loaded] = useFonts({
+        OpenSans: require("../../assets/fonts/OpenSans.ttf"),
+      });      
+      if (!loaded) {
+        return null;
+      }
+   
     return (
         <RNText style={[
             styles.text,

@@ -7,12 +7,10 @@ import {
   StyleSheet,
   KeyboardType,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Modal,
 } from "react-native";
 import Colors from "../../constants/Сolors";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HexKeyboard } from "../HexKeyboard";
-import { BottomSheet } from "react-native-elements";
 
 interface TextInputProps {
   type?: "text" | "email" | "password" | "hex";
@@ -52,16 +50,6 @@ const CustomTextInput: React.FunctionComponent<TextInputProps> = (props) => {
   const [visible, setVisible] = useState(false);
   const [hexShow, setHexShow] = useState(false);
 
-  const onShow = () => {
-    setHexShow(true);
-    inputRef.current.blur();
-  };
-
-  const onHide = () => {
-    setHexShow(false);
-    setFocused(false);
-  };
-
   const handleBlur = () => {
     type === "hex" ? (onShow(), setFocused(true)) : setFocused(false);
   };
@@ -69,15 +57,29 @@ const CustomTextInput: React.FunctionComponent<TextInputProps> = (props) => {
   const handleFocus = () => {
     type === "hex" ? (onShow(), setFocused(true)) : setFocused(true);
   };
+  const onShow: () => void = () => {
+    setHexShow(true);
+    inputRef.current.blur();
+  };
 
-  const handleCancel = () => {
+  const onHide: () => void = () => {
+    setHexShow(false);
+    setFocused(false);
+  };
+
+  const handleCancel:() => void = () => {
     setValue("");
     onChangeMask("");
   };
 
   const handleKey = (text: string) => {
-    value.length < 8 &&
-      (onChangeMask(value + text), setValue((value) => value + text));
+    if (text === "cancel") {
+      handleCancel();
+    } else if (text === "enter") {
+      onHide();
+    } else
+      value.length < 8 &&
+        (onChangeMask(value + text), setValue((value) => value + text));
   };
 
   const commonProps = {
@@ -104,36 +106,32 @@ const CustomTextInput: React.FunctionComponent<TextInputProps> = (props) => {
       }
       locations={focused ? [0.08, 0.8] : [1, 1]}
     >
-      <SafeAreaProvider>
-        <TextInput
-          ref={inputRef}
-          multiline={multiline}
-          showSoftInputOnFocus={type === "hex" ? false : true}
-          keyboardType={type === "email" ? "email-address" : "default"}
-          secureTextEntry={type === "password" && !visible}
-          contextMenuHidden={type === "password"}
-          {...commonProps}
-          {...rest}
-        />
-        {type == "hex" && (
-          <TouchableWithoutFeedback onPress={onHide}>
-            <BottomSheet
-              modalProps={{
-                animationType: "fade",
-              }}
-              isVisible={hexShow}
-              containerStyle={styles.keyboardStyle}
-            >
-              <HexKeyboard
-                hideKeyboard={onHide}
-                cancel={handleCancel}
-                insertText={(e: string) => handleKey(e)}
-                style={styles.keyboardStyle}
-              />
-            </BottomSheet>
-          </TouchableWithoutFeedback>
-        )}
-      </SafeAreaProvider>
+      <TextInput
+        ref={inputRef}
+        multiline={multiline}
+        showSoftInputOnFocus={type === "hex" ? false : true}
+        keyboardType={type === "email" ? "email-address" : "default"}
+        secureTextEntry={type === "password" && !visible}
+        contextMenuHidden={type === "password"}
+        {...commonProps}
+        {...rest}
+      />
+      {type == "hex" && (
+        <TouchableOpacity style={{ backgroundColor: "red" }} onPress={onHide}>
+          <Modal
+            animationType="fade"
+            visible={hexShow}
+            transparent={true}
+            onRequestClose={onHide}
+          >
+            <HexKeyboard
+              inputText={(e: string) => handleKey(e)}
+              style={styles.keyboardStyle}
+            />
+          </Modal>
+        </TouchableOpacity>
+      )}
+
       {type === "password" && (
         <TouchableOpacity
           style={styles.eye}
@@ -197,8 +195,8 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   keyboardStyle: {
-    flex: 2,
+    flex: 1,
     bottom: 0,
-    backgroundColor: "transparent",
+    marginTop: "20%",
   },
 });
