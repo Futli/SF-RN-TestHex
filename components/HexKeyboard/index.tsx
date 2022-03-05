@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flexWrap: "wrap",    
-    bottom: "-50%",
+    bottom: "-70%",
     fontFamily: 'OpenSans'
   },
   buttonLabel: {      
