@@ -1,9 +1,10 @@
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet,Platform } from "react-native";
+import { View, TouchableOpacity, Text, StyleSheet, StyleProp, ViewStyle } from "react-native";
 
 interface HexKeyboardProps {
-  style: object;
-  inputText:(value: string) => void;
+  style?: StyleProp<ViewStyle>;
+  inputText: (value: string) => void;
 }
 
 export const HexKeyboard: React.FunctionComponent<HexKeyboardProps> = ({
@@ -42,7 +43,7 @@ export const HexKeyboard: React.FunctionComponent<HexKeyboardProps> = ({
       <View style={styles.container}>
         {keys.map((i) => (
           <View key={i.title} style={styles.button}>
-            <TouchableOpacity onPress={() => inputText(i.value)}>
+            <TouchableOpacity style={{ alignItems: "center" }} onPress={() => inputText(i.value)}>
               <Text style={styles.buttonLabel}> {i.title} </Text>
             </TouchableOpacity>
           </View>
@@ -54,26 +55,24 @@ export const HexKeyboard: React.FunctionComponent<HexKeyboardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    
+    height: 164,
     flexDirection: "row",
-    flexWrap: "wrap",    
-    bottom: "-60%",
-    fontFamily: 'OpenSans'
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  buttonLabel: {      
-    textAlign: "center",
-    fontSize: 25,  
-    
-    paddingHorizontal: 5,
-    paddingVertical: 5,
-  },
-  button: {    
-    paddingRight: (Platform.OS === 'ios' ?  5 : 0),
-    flex: 1,
-    margin: 3,    
+  button: {
     minWidth: "15%",
-    borderWidth: 2,    
-    borderColor: "#d6d7da",
-    borderRadius: 10,    
+    borderRadius: 10,
+    borderColor: "#E0E0E4",
+    borderWidth: 1,
+    backgroundColor: "#ECEDEE",
+    margin: "0.7%",
   },
+  buttonLabel: {
+    padding: 10,
+    fontSize: 22,
+    lineHeight: 24,
+  },
+
 });

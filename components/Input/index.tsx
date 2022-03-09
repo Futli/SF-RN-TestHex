@@ -8,6 +8,7 @@ import {
   KeyboardType,
   TouchableOpacity,
   Modal,
+  Pressable,
 } from "react-native";
 import Colors from "../../constants/Сolors";
 import { HexKeyboard } from "../HexKeyboard";
@@ -67,7 +68,7 @@ const CustomTextInput: React.FunctionComponent<TextInputProps> = (props) => {
     setFocused(false);
   };
 
-  const handleCancel:() => void = () => {
+  const handleCancel: () => void = () => {
     setValue("");
     onChangeMask("");
   };
@@ -117,19 +118,19 @@ const CustomTextInput: React.FunctionComponent<TextInputProps> = (props) => {
         {...rest}
       />
       {type == "hex" && (
-        <TouchableOpacity style={{ backgroundColor: "red" }} onPress={onHide}>
-          <Modal
-            animationType="fade"
-            visible={hexShow}
-            transparent={true}
-            onRequestClose={onHide}
-          >
-            <HexKeyboard
-              inputText={(e: string) => handleKey(e)}
-              style={styles.keyboardStyle}
-            />
-          </Modal>
-        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          visible={hexShow}
+          transparent={true}
+        >
+          <Pressable style={styles.pressable} onPressIn={() => onHide()} />
+          <HexKeyboard
+            inputText={(e: string) => handleKey(e)}
+            style={styles.keyboardStyle}
+          />
+        </Modal>
+
       )}
 
       {type === "password" && (
@@ -194,9 +195,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingBottom: 2,
   },
+  pressable: {
+    flex: 1,
+    marginBottom: 169
+  },
   keyboardStyle: {
     flex: 1,
-    bottom: 0,
-    marginTop: "20%",
+    position: "absolute",
+    width: "100%",
+    bottom: 5,
+    alignSelf: "center"
   },
 });
